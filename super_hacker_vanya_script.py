@@ -35,6 +35,7 @@ COMMENDATION_EXAMPLES = [
     "Теперь у тебя точно все получится!"
 ]
 
+
 def get_school_kid(full_name):
     try:
         return Schoolkid.objects.get(full_name__contains=full_name)
@@ -60,7 +61,6 @@ def remove_chastisements(full_name):
     schoolkid_chastisements.delete()
 
 
-
 def create_commendation(full_name, lesson):
     school_kid = get_school_kid(full_name)
     if not school_kid:
@@ -73,7 +73,7 @@ def create_commendation(full_name, lesson):
         return "Не найдено уроков с таким названием!"
     random_lesson = random.choice(lessons)
     Commendation.objects.create(
-        text= random.choice(COMMENDATION_EXAMPLES),
+        text=random.choice(COMMENDATION_EXAMPLES),
         created=random_lesson.date,
         schoolkid=school_kid,
         subject=random_lesson.subject,
