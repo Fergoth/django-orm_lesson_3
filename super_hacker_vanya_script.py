@@ -56,8 +56,8 @@ def fix_marks(full_name):
 
 def remove_chastisements(full_name):
     school_kid = get_school_kid(full_name)
-    schoolkid_chastisement = Chastisement.objects.filter(schoolkid=school_kid)
-    schoolkid_chastisement.delete()
+    schoolkid_chastisements = Chastisement.objects.filter(schoolkid=school_kid)
+    schoolkid_chastisements.delete()
 
 
 
@@ -65,7 +65,7 @@ def create_commendation(full_name, lesson):
     school_kid = get_school_kid(full_name)
     if not school_kid:
         return
-    lessons = Lesson.objects.filter(
+    lessons = Lesson.objects.order_by('Date').filter(
         year_of_study=school_kid.year_of_study,
         group_letter=school_kid.group_letter,
         subject__title=lesson)
