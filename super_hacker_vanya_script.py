@@ -35,37 +35,36 @@ COMMENDATION_EXAMPLES = [
     "Теперь у тебя точно все получится!"
 ]
 
+def get_school_kid(full_name):
+    try:
+        return Schoolkid.objects.get(full_name__contains=full_name)
+    except Schoolkid.DoesNotExist:
+        print("Имя не существует!")
+        return None
+    except Schoolkid.MultipleObjectsReturned:
+        print("Несколько учеников с таким именем!")
+        return None
+
 
 def fix_marks(full_name):
-    try:
-        school_kid = Schoolkid.objects.get(full_name__contains=full_name)
-    except Schoolkid.DoesNotExist:
-        return "Имя не существует!"
-    except Schoolkid.MultipleObjectsReturned:
-        return "Несколько учеников с таким именем!"
+    school_kid = get_school_kid(full_name)
+    if not school_kid:
+        return
     my_marks = Mark.objects.filter(schoolkid=school_kid)
     my_marks.filter(points__lte=3).update(points=5)
 
 
 def remove_chastisements(full_name):
-    try:
-        school_kid = Schoolkid.objects.get(full_name__contains=full_name)
-    except Schoolkid.DoesNotExist:
-        return "Имя не существует!"
-    except Schoolkid.MultipleObjectsReturned:
-        return "Несколько учеников с таким именем!"
+    school_kid = get_school_kid(full_name)
     schoolkid_chastisement = Chastisement.objects.filter(schoolkid=school_kid)
     schoolkid_chastisement.delete()
 
 
 
 def create_commendation(full_name, lesson):
-    try:
-        school_kid = Schoolkid.objects.get(full_name__contains=full_name)
-    except Schoolkid.DoesNotExist:
-        return "Имя не существует!"
-    except Schoolkid.MultipleObjectsReturned:
-        return "Несколько учеников с таким именем!"
+    school_kid = get_school_kid(full_name)
+    if not school_kid:
+        return
     lessons = Lesson.objects.filter(
         year_of_study=school_kid.year_of_study,
         group_letter=school_kid.group_letter,
