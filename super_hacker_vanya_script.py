@@ -65,13 +65,12 @@ def create_commendation(full_name, lesson):
     school_kid = get_school_kid(full_name)
     if not school_kid:
         return
-    lessons = Lesson.objects.order_by('Date').filter(
+    random_lesson = Lesson.objects.filter(
         year_of_study=school_kid.year_of_study,
         group_letter=school_kid.group_letter,
-        subject__title=lesson)
-    if not lessons:
+        subject__title=lesson).order_by('?').first()
+    if not random_lesson:
         return "Не найдено уроков с таким названием!"
-    random_lesson = random.choice(lessons)
     Commendation.objects.create(
         text=random.choice(COMMENDATION_EXAMPLES),
         created=random_lesson.date,
